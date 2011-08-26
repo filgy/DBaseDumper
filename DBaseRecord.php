@@ -4,6 +4,14 @@
 		
 		private $values = Array();
 		
+		public function __construct(Array $values = Array()){
+			$this->values = $values;
+		}
+		
+		public function __destruct(){
+			unset($this->values);
+		}
+		
 		public function __set($key, $val){
 			$this->values[$key] = $val;
 		}
