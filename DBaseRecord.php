@@ -1,6 +1,6 @@
 <?php
 
-	class DBaseRecord{
+	class DBaseRecord implements ArrayAccess{
 		
 		private $values = Array();
 		
@@ -21,6 +21,22 @@
 				return $this->values[$key];
 				
 			return NULL;
+		}
+		
+		public function offsetExists($offset){
+			return isset($this->values[$offset]);
+		}
+		
+		public function offsetGet($offset){
+			return isset($this->values[$offset]) ? $this->values[$offset] : NULL;
+		}
+		
+		public function offsetSet($offset, $value){
+			$this->values[$offset] = $value;
+		}
+		
+		public function offsetUnset($offset){
+			unset($this->values[$offset]);
 		}
 		
 	};
