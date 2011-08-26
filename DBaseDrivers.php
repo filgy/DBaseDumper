@@ -6,7 +6,7 @@
 	* @author			Filgy (filgy@sniff.cz)
 	* @package			DBaseDumper (Database dumper)
 	* @license			GNU/GPL v2
-	* @update			26.8.2011 19:12
+	* @update			26.8.2011 19:45
 	*/
 	
 	abstract class DBaseDriver{
@@ -71,10 +71,10 @@
 			if($this->DBaseHandler === NULL){
 				$this->DBaseHandler = @mysql_connect($this->config['hostname'], $this->config['username'], $this->config['password']);
 				
-				if(!mysql_select_db($this->config['dbname'], $this->DBaseHandler))
+				if(!@mysql_select_db($this->config['dbname'], $this->DBaseHandler))
 					throw new DBaseDriverException("Can't select database");
 					
-				if(!mysql_query("SET NAMES ".((isset($this->config['charset']))? $this->config['charset'] : "utf8"), $this->DBaseHandler))
+				if(!@mysql_query("SET NAMES ".((isset($this->config['charset']))? $this->config['charset'] : "utf8"), $this->DBaseHandler))
 					throw new DBaseDriverException("Can't set charset");
 			}
 				
