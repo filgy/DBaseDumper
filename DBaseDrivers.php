@@ -68,8 +68,15 @@
 		* @throws DBaseDriverException
 		*/
 		private function getConnection(){
-			if($this->DBaseHandler === NULL)
+			if($this->DBaseHandler === NULL){
 				$this->DBaseHandler = @mysql_connect($this->config['hostname'], $this->config['username'], $this->config['password']);
+				
+				if(!mysql_select_db($this->config['dbname'], $this->DBaseHandler))
+					throw new DBaseDriverException("Can't select database");
+					
+				if(!mysql_query("SET NAMES ".((isset($this->config['charset']))? $this->config['charset'] : "utf8"), $this->DBaseHandler))
+					throw new DBaseDriverException("Can't set charset");
+			}
 				
 			if(!$this->DBaseHandler)
 				throw new DBaseDriverException("Can't connect to database server");
