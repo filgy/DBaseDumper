@@ -28,8 +28,12 @@
 			
 		}
 		
+		/**
+		* Get result - one column
+		* @return string
+		*/
 		public function singleColumn($sql){
-			
+			return mysql_result($this->query($sql), 0);
 		}
 		
 		/**
