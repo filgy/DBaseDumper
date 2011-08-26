@@ -44,3 +44,30 @@
 			
 		}
 	};
+	
+	final class DBaseDriverMySQLi extends DBaseDriver implements DBaseDriverI{
+		
+		public function __construct(Array $config){
+			parent::__construct($config);
+		}
+		
+		public function singleRow($sql){
+			
+		}
+		
+		public function singleColumn($sql){
+			
+		}
+		
+		public function query($sql){
+			
+		}
+		
+		public function escape($string){
+			
+		}
+		
+		private function getConnection(){
+			
+		}
+	};
