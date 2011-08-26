@@ -16,5 +16,8 @@
 		public function singleColumn($sql);
 		public function query($sql);
 		
-		public function escape($string);		
+		public function escape($string);	
+		
+		public function showTables($dbName);
+		public function showColumns($dbName, $tableName);
 	};

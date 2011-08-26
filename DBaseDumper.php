@@ -22,8 +22,20 @@
 			$this->DBaseDriver = new $driver($config);
 		}
 		
-		public function __call($name, $args){
+		public function dump($dbName){
+			$tables = $this->DBaseDriver->showTables($dbName);		
 
+			foreach($tables as $table){
+
+			}			
+		}
+		
+		public function dumpTable($dbName, $tableName){
+			$columns = $this->DBaseDriver->showColumns($dbName, $tableName);
+			
+			foreach($columns as $column){
+				
+			}
 		}
 	
 	};

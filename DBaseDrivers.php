@@ -6,7 +6,7 @@
 	* @author			Filgy (filgy@sniff.cz)
 	* @package			DBaseDumper (Database dumper)
 	* @license			GNU/GPL v2
-	* @update			26.8.2011 19:45
+	* @update			26.8.2011 21:30
 	*/
 	
 	abstract class DBaseDriver{
@@ -46,6 +46,7 @@
 		* @throws DBaseDriverException
 		*/
 		public function query($sql){
+			var_dump($sql);
 			$result = mysql_query($sql, $this->getConnection());
 			
 			if(!$result)
@@ -60,6 +61,46 @@
 		*/
 		public function escape($string){
 			return mysql_real_escape_string($string, $this->getConnection());
+		}
+		
+		/**
+		* Return tables list
+		* @return DBaseRecord
+		* @throws DBaseDriverException
+		*/
+		public function showTables($dbName){
+			try{
+				$query = $this->query("SHOW TABLES FROM `".$this->escape($dbName)."`");
+				
+				$records = new DBaseRecord;
+				while($result = mysql_fetch_array($query))
+					$records[] = $result[0];
+				
+				return $records;
+			}
+			catch(DBaseDriverException $e){
+				throw new DBaseDriverException("Undefined database");
+			}
+		}
+		
+		/**
+		* Return columns list
+		* @return DBaseRecord
+		* @throws DBaseDriverException
+		*/
+		public function showColumns($dbName, $tableName){
+			try{
+				$query = $this->query("SHOW COLUMNS FROM `".$this->escape($dbName)."`.`".$this->escape($tableName)."`");
+				
+				$records = new DBaseRecord;
+				while($result = mysql_fetch_assoc($query))
+					$records[] = $result;
+					
+				return $records;
+			}
+			catch(DBaseDriverException $e){
+				throw new DBaseDriverException("Undefined database/table");
+			}
 		}
 		
 		/**
@@ -107,7 +148,16 @@
 			
 		}
 		
+		public function showTables($dbName){
+			
+		}
+		
+		public function showColumns($dbName, $tableName){
+			
+		}
+		
 		private function getConnection(){
 			
 		}
+
 	};
