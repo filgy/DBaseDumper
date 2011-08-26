@@ -36,8 +36,12 @@
 			
 		}
 		
+		/**
+		* Return escaped string
+		* @return string
+		*/
 		public function escape($string){
-			
+			return mysql_real_escape_string($string, $this->getConnection());
 		}
 		
 		/**
