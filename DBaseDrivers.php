@@ -24,8 +24,12 @@
 			parent::__construct($config);
 		}
 		
+		/**
+		* Get result - one row
+		* @return Array
+		*/
 		public function singleRow($sql){
-			
+			return mysql_fetch_row($this->query(sql));
 		}
 		
 		/**
