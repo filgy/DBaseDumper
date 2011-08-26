@@ -32,8 +32,18 @@
 			
 		}
 		
+		/**
+		* Execute query
+		* @return mysql_resource
+		* @throws DBaseDriverException
+		*/
 		public function query($sql){
+			$result = mysql_query($sql, $this->getConnection());
 			
+			if(!$result)
+				throw new DBaseDriverException("Cannot execute query");
+			
+			return $result;
 		}
 		
 		/**
