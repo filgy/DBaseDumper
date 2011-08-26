@@ -6,7 +6,7 @@
 	* @author			Filgy (filgy@sniff.cz)
 	* @package			DBaseDumper (Database dumper)
 	* @license			GNU/GPL v2
-	* @update			26.8.2011 21:40
+	* @update			26.8.2011 21:51
 	*/
 	
 	abstract class DBaseDriver{
@@ -29,7 +29,7 @@
 		* @return Array
 		*/
 		public function singleRow($sql){
-			return mysql_fetch_row($this->query(sql));
+			return mysql_fetch_row($this->query($sql));
 		}
 		
 		/**
@@ -104,6 +104,22 @@
 		}
 		
 		/**
+		* Return create table
+		* @return DBaseRecord
+		* @throws DBaseDriverException
+		*/
+		public function showCreate($dbName, $tableName){
+			try{
+				$result = $this->singleRow("SHOW CREATE TABLE `".$this->escape($dbName)."`.`".$this->escape($tableName)."`");
+				
+				return new DBaseRecord($result);
+			}
+			catch(DBaseDriverException $e){
+				throw new DBaseDriverException("Undefined database/table");
+			}
+		}
+		
+		/**
 		* Create singleton DBaseHandler
 		* @return mysql_resource
 		* @throws DBaseDriverException
@@ -150,6 +166,10 @@
 		}
 		
 		public function showColumns($dbName, $tableName){
+			
+		}
+		
+		public function showCreate($dbName, $tableName){
 			
 		}
 		
