@@ -18,7 +18,7 @@
 		}
 	};
 	
-	final class DBaseDriverMySQL extends DBaseDriver implements DBaseDriverI{
+	final class DBaseDriverMysql extends DBaseDriver implements DBaseDriverI{
 		
 		public function __construct(Array $config){
 			parent::__construct($config);
@@ -85,7 +85,7 @@
 		}
 	};
 	
-	final class DBaseDriverMySQLi extends DBaseDriver implements DBaseDriverI{
+	final class DBaseDriverMysqli extends DBaseDriver implements DBaseDriverI{
 		
 		public function __construct(Array $config){
 			parent::__construct($config);
