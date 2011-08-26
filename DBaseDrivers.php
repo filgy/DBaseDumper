@@ -40,8 +40,19 @@
 			
 		}
 		
+		/**
+		* Create singleton DBaseHandler
+		* @return mysql_resource
+		* @throws DBaseDriverException
+		*/
 		private function getConnection(){
-			
+			if($this->DBaseHandler === NULL)
+				$this->DBaseHandler = @mysql_connect($this->config['hostname'], $this->config['username'], $this->config['password']);
+				
+			if(!$this->DBaseHandler)
+				throw new DBaseDriverException("Can't connect to database server");
+				
+			return $this->DBaseHandler;
 		}
 	};
 	
