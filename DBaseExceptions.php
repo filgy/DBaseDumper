@@ -6,10 +6,14 @@
 	* @author			Filgy (filgy@sniff.cz)
 	* @package			DBaseDumper (Database dumper)
 	* @license			GNU/GPL v2
-	* @update			26.8.2011 19:06
+	* @update			30.8.2011 17:57
 	*/
 	
 	class DBaseException extends Exception{
+		
+	};
+	
+	class DBaseModelException extends Exception{
 		
 	};
 	
