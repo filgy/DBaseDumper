@@ -22,6 +22,9 @@
 		
 		public function __construct(Array $config){
 			parent::__construct($config);
+			
+			if(!extension_loaded("mysql"))
+				throw new DBaseDriverException("Can't load mysql extension");
 		}
 		
 		/**
@@ -105,14 +108,14 @@
 		
 		/**
 		* Return create table
-		* @return DBaseRecord
+		* @return string
 		* @throws DBaseDriverException
 		*/
 		public function showCreate($dbName, $tableName){
 			try{
 				$result = $this->singleRow("SHOW CREATE TABLE `".$this->escape($dbName)."`.`".$this->escape($tableName)."`");
 				
-				return new DBaseRecord($result);
+				return $result[1];
 			}
 			catch(DBaseDriverException $e){
 				throw new DBaseDriverException("Undefined database/table");
@@ -143,6 +146,9 @@
 		
 		public function __construct(Array $config){
 			parent::__construct($config);
+			
+			if(!extension_loaded("mysqli"))
+				throw new DBaseDriverException("Can't load mysqli extension");
 		}
 		
 		public function singleRow($sql){
