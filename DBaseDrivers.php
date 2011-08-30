@@ -11,7 +11,8 @@
 	
 	abstract class DBaseDriver{
 		protected $config = Array();
-		protected $DBaseHandler = NULL;
+		protected $handler = NULL;
+		protected $resultset = NULL;
 		
 		public function __construct(Array $config){
 			$this->config = $config;
@@ -32,7 +33,7 @@
 		* @return Array
 		*/
 		public function singleRow($sql){
-			return mysql_fetch_row($this->query($sql));
+			return mysql_fetch_row($this->query($sql, FALSE));
 		}
 		
 		/**
@@ -40,7 +41,7 @@
 		* @return string
 		*/
 		public function singleColumn($sql){
-			return mysql_result($this->query($sql), 0);
+			return mysql_result($this->query($sql, FALSE), 0);
 		}
 		
 		/**
@@ -48,14 +49,39 @@
 		* @return mysql_resource
 		* @throws DBaseDriverException
 		*/
-		public function query($sql){
-			var_dump($sql);
+		public function query($sql, $store = TRUE){
+			var_dump($sql);			
 			$result = mysql_query($sql, $this->getConnection());
 			
 			if(!$result)
 				throw new DBaseDriverException("Cannot execute query");
+
+			return ($store)? $this->resultset = $result : $result;
+		}
+		
+		/**
+		* Returns next result from resultset
+		* @return DBaseRecord, bool
+		* @throws DBaseDriverException
+		*/
+		public function nextResult(){
+			if($this->resultset === NULL)
+				throw new DBaseDriverException("Invalid resultset");
+				
+			if(($row = mysql_fetch_array($this->resultset)) === FALSE)
+				return FALSE;
+			else
+				return new DBaseRecord($row);
+		}
+		
+		/**
+		* Clear resultset
+		*/
+		public function clearResult(){
+			if($this->resultset !== NULL)
+				unset($this->resultset);
 			
-			return $result;
+			$this->resultset = NULL;
 		}
 		
 		/**
@@ -73,7 +99,7 @@
 		*/
 		public function showTables($dbName){
 			try{
-				$query = $this->query("SHOW TABLES FROM `".$this->escape($dbName)."`");
+				$query = $this->query("SHOW TABLES FROM `".$this->escape($dbName)."`", FALSE);
 				
 				$records = new DBaseRecord;
 				while($result = mysql_fetch_array($query))
@@ -93,7 +119,7 @@
 		*/
 		public function showColumns($dbName, $tableName){
 			try{
-				$query = $this->query("SHOW COLUMNS FROM `".$this->escape($dbName)."`.`".$this->escape($tableName)."`");
+				$query = $this->query("SHOW COLUMNS FROM `".$this->escape($dbName)."`.`".$this->escape($tableName)."`", FALSE);
 				
 				$records = new DBaseRecord;
 				while($result = mysql_fetch_assoc($query))
@@ -111,7 +137,7 @@
 		* @return string
 		* @throws DBaseDriverException
 		*/
-		public function showCreate($dbName, $tableName){
+		public function showCreateTable($dbName, $tableName){
 			try{
 				$result = $this->singleRow("SHOW CREATE TABLE `".$this->escape($dbName)."`.`".$this->escape($tableName)."`");
 				
@@ -123,22 +149,22 @@
 		}
 		
 		/**
-		* Create singleton DBaseHandler
+		* Create singleton handler
 		* @return mysql_resource
 		* @throws DBaseDriverException
 		*/
 		private function getConnection(){
-			if($this->DBaseHandler === NULL){
-				$this->DBaseHandler = @mysql_connect($this->config['hostname'], $this->config['username'], $this->config['password']);
+			if($this->handler === NULL){
+				$this->handler = @mysql_connect($this->config['hostname'], $this->config['username'], $this->config['password']);
 					
-				if(!@mysql_query("SET NAMES ".((isset($this->config['charset']))? $this->config['charset'] : "utf8"), $this->DBaseHandler))
+				if(!@mysql_query("SET NAMES ".((isset($this->config['charset']))? $this->config['charset'] : "utf8"), $this->handler))
 					throw new DBaseDriverException("Can't set charset");
 			}
 				
-			if(!$this->DBaseHandler)
+			if(!$this->handler)
 				throw new DBaseDriverException("Can't connect to database server");
 				
-			return $this->DBaseHandler;
+			return $this->handler;
 		}
 	};
 	
@@ -163,6 +189,14 @@
 			
 		}
 		
+		public function nextResult(){
+		
+		}
+		
+		public function clearResult(){
+			
+		}
+		
 		public function escape($string){
 			
 		}
@@ -175,7 +209,7 @@
 			
 		}
 		
-		public function showCreate($dbName, $tableName){
+		public function showCreateTable($dbName, $tableName){
 			
 		}
 		

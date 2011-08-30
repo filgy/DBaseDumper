@@ -16,10 +16,13 @@
 		public function singleColumn($sql);
 		public function query($sql);
 		
+		public function nextResult();
+		public function clearResult();
+		
 		public function escape($string);	
 		
 		public function showTables($dbName);
 		public function showColumns($dbName, $tableName);
 		
-		public function showCreate($dbName, $tableName);
+		public function showCreateTable($dbName, $tableName);
 	};
