@@ -6,36 +6,36 @@
 	* @author			Filgy (filgy@sniff.cz)
 	* @package			DBaseDumper (Database dumper)
 	* @license			GNU/GPL v2
-	* @update			26.8.2011 20:10
+	* @update			30.8.2011 18:19
 	*/
 
 	class DBaseDumper{
 		
-		private $DBaseDriver = NULL;
+		private $DBaseModel = NULL;
 		
 		public function __construct(Array $config){
-			$driver = "DBaseDriver".ucfirst($config['driver']);
+			$modelName = "DBaseModel".ucfirst($config['driver']);
 			
-			if(!class_exists($driver))
+			if(!class_exists($modelName))
 				throw new DBaseException("Undefined driver");
 			
-			$this->DBaseDriver = new $driver($config);
+			$this->DBaseModel = new $modelName($config);
 		}
 		
 		public function dump($dbName){
-			$tables = $this->DBaseDriver->showTables($dbName);		
+			$tables = $this->DBaseModel->showTables($dbName);		
 
-			foreach($tables as $table){
-
-			}			
+			foreach($tables as $table)
+				$this->dumpTable($dbName, $table);
 		}
 		
 		public function dumpTable($dbName, $tableName){
-			$columns = $this->DBaseDriver->showColumns($dbName, $tableName);
+			$columns = $this->DBaseModel->showColumns($dbName, $tableName);
 			
 			foreach($columns as $column){
-				
+				var_dump($column);
 			}
+			
 		}
 	
 	};
