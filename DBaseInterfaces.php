@@ -6,7 +6,7 @@
 	* @author			Filgy (filgy@sniff.cz)
 	* @package			DBaseDumper (Database dumper)
 	* @license			GNU/GPL v2
-	* @update			26.8.2011 21:45
+	* @update			30.8.2011 17:47
 	*/
 
 	interface DBaseDriverI{
@@ -20,6 +20,10 @@
 		public function clearResult();
 		
 		public function escape($string);	
+	};
+	
+	interface DBaseModelI{
+		public function __construct(Array $config);
 		
 		public function showTables($dbName);
 		public function showColumns($dbName, $tableName);
