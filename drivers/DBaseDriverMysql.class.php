@@ -6,7 +6,7 @@
 	* @author			Filgy (filgy@sniff.cz)
 	* @package			DBaseDumper (Database dumper)
 	* @license			GNU/GPL v2
-	* @update			30.8.2011 18:39
+	* @update			31.8.2011 9:35
 	*/
 
 	final class DBaseDriverMysql extends DBaseDriver implements DBaseDriverI{
@@ -80,6 +80,14 @@
 		*/
 		public function escape($string){
 			return mysql_real_escape_string($string, $this->getConnection());
+		}
+		
+		/**
+		* Return client encoding
+		* @return string
+		*/
+		public function getCharset(){
+			return mysql_client_encoding($this->getConnection());
 		}
 
 		/**

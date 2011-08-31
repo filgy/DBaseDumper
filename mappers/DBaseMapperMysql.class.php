@@ -1,38 +1,38 @@
 <?php
 
 	/**
-	* DBaseModels
+	* DBaseMapperMysql
 	*
 	* @author			Filgy (filgy@sniff.cz)
 	* @package			DBaseDumper (Database dumper)
 	* @license			GNU/GPL v2
-	* @update			30.8.2011 18:06
+	* @update			31.8.2011 9:44
 	*/
 	
-	abstract class DBaseModel{
-		protected $DBaseDriver;
-		
-		public function __construct(Array $config){
-			$driverName = "DBaseDriver".ucfirst((isset($config['extension']))? $config['extension'] : $config['driver']);
-
-			if(!class_exists($driverName))
-				throw new DBaseModelException("Undefined driver");
-				
-			$this->DBaseDriver = new $driverName($config);
-		}
-
-	};
-	
-	final class DBaseModelMysql extends DBaseModel implements DBaseModelI{		
+	final class DBaseMapperMysql extends DBaseMapper implements DBaseMapperI{		
 	
 		public function __construct(Array $config){
 			parent::__construct($config);
 		}
 		
 		/**
+		* Return set names
+		* @return string
+		* @throws DBaseMapperException
+		*/
+		public function showSetNames(){
+			try{
+				return "SET NAMES ".$this->DBaseDriver->getCharset();
+			}
+			catch(DBaseDriverException $e){
+				throw new DBaseMapperException("");
+			}
+		}
+		
+		/**
 		* Return tables list
 		* @return DBaseRecord
-		* @throws DBaseModelException
+		* @throws DBaseMapperException
 		*/
 		public function showTables($dbName){
 			try{
@@ -45,14 +45,14 @@
 				return $records;
 			}
 			catch(DBaseDriverException $e){
-				throw new DBaseModelException("Undefined database");
+				throw new DBaseMapperException("Undefined database");
 			}
 		}
 		
 		/**
 		* Return columns list
 		* @return DBaseRecord
-		* @throws DBaseModelException
+		* @throws DBaseMapperException
 		*/
 		public function showColumns($dbName, $tableName){
 			try{
@@ -65,14 +65,14 @@
 				return $records;
 			}
 			catch(DBaseDriverException $e){
-				throw new DBaseModelException("Undefined database/table");
+				throw new DBaseMapperException("Undefined database/table");
 			}
 		}
 		
 		/**
 		* Return create table
 		* @return string
-		* @throws DBaseModelException
+		* @throws DBaseMapperException
 		*/
 		public function showCreateTable($dbName, $tableName){
 			try{
@@ -81,28 +81,20 @@
 				return $result[1];
 			}
 			catch(DBaseDriverException $e){
-				throw new DBaseModelException("Undefined database/table");
+				throw new DBaseMapperException("Undefined database/table");
 			}
 		}
 		
-	};
-	
-	final class DBaseModelPostgresql extends DBaseModel implements DBaseModelI{
-		
-		public function __construct(Array $config){
-			parent::__construct($config);
+		/**
+		* Return drop table
+		* @return string
+		*/
+		public function showDropTable($tableName){
+			return "DROP TABLE IF EXISTS `".$tableName."`";
 		}
 		
-		public function showTables($dbName){
-			
-		}
-		
-		public function showColumns($dbName, $tableName){
-			
-		}
-		
-		public function showCreateTable($dbName, $tableName){
-			
+		public function getDelimiter(){
+			return ";";
 		}
 		
 	};

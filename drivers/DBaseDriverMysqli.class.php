@@ -6,7 +6,7 @@
 	* @author			Filgy (filgy@sniff.cz)
 	* @package			DBaseDumper (Database dumper)
 	* @license			GNU/GPL v2
-	* @update			30.8.2011 18:41
+	* @update			31.8.2011 9:35
 	*/
 
 	final class DBaseDriverMysqli extends DBaseDriver implements DBaseDriverI{
@@ -39,6 +39,10 @@
 		}
 		
 		public function escape($string){
+			
+		}
+		
+		public function getCharset(){
 			
 		}
 		
